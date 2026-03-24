@@ -12,6 +12,7 @@ public:
 
 	double getMouseDeltaX() { return deltaX; }
 	double getMouseDeltaY() { return deltaY; }
+	bool firstMove = true;
 
 private:
 	GLFWwindow* window;

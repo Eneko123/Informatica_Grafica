@@ -37,6 +37,15 @@ void InputManager::handleKeys(GLFWwindow* window, int key, int scancode, int act
 void InputManager::handelMouse(GLFWwindow* window, double posX, double posY)
 {
 	if (!instance) return;
+	if (instance->firstMove)
+	{
+		instance->lastX = posX;
+		instance->lastY = posY;
+		instance->deltaX = 0.0f;
+		instance->deltaY = 0.0f;
+		instance->firstMove = false;
+		return;
+	}
 	instance->deltaX = posX - instance->lastX;
 	instance->deltaY = posY - instance->lastY;
 

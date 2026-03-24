@@ -19,6 +19,9 @@ public:
 	GLuint GetIdProjection() { return uniformProjection; }
 	GLuint GetIdView() { return uniformView; }
 
+	GLuint GetIdAmbientColor() { return uniformAmbientColor; }
+	GLuint GetIdAmbientIntensity() { return uniformAmbientIntensity; }
+
 	void useShader();
 	void deleteShader();
 	~Shader();
@@ -26,6 +29,7 @@ public:
 
 private:
 	GLuint idShader = 0, uniformModel = 0, uniformProjection  = 0, uniformView = 0;
+	GLuint uniformAmbientColor = 0, uniformAmbientIntensity = 0;
 	std::string ReadFile(const char* path);
 	void AddShader(const char* shaderCode, GLenum shaderType);
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
