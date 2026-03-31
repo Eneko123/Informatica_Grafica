@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include <glm/glm.hpp>
 
 Mesh::Mesh()
 {
@@ -51,7 +50,7 @@ void Mesh::RenderMesh()
 {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -61,39 +60,37 @@ Mesh::~Mesh()
     DeleteMesh();
 }
 
-void Mesh::RecalculateNormals(GLfloat* vertices, GLuint* indices, GLuint numVertices, GLsizei numIndices, unsigned int numDatosV, unsigned int offsetNormal)
+void Mesh::RecalculateNormals(GLfloat* vertices, GLuint* indices, GLuint numVertices, GLsizei numIndices, unsigned int numDatosV, unsigned int offsetNormals)
 {
-    for (int i = 0; i < numIndices; i += 3)
-    {
+    for (int i = 0; i < numIndices; i += 3) {
         unsigned int index0 = indices[i] * numDatosV;
         unsigned int index1 = indices[i+1] * numDatosV;
         unsigned int index2 = indices[i+2] * numDatosV;
 
         glm::vec3 v(vertices[index1] - vertices[index0], vertices[index1 + 1] - vertices[index0 + 1], vertices[index1 + 2] - vertices[index0 + 2]);
         glm::vec3 u(vertices[index2] - vertices[index0], vertices[index2 + 1] - vertices[index0 + 1], vertices[index2 + 2] - vertices[index0 + 2]);
+        glm::vec3 normal = glm::normalize(glm::cross(v, u));
+        
+        vertices[index0 + offsetNormals] += normal.x;
+        vertices[index0 + offsetNormals+1] += normal.y;
+        vertices[index0 + offsetNormals+2] += normal.z;
 
-        glm::vec3 normal = glm::normalize(glm::cross(u, v));
+        vertices[index1 + offsetNormals] += normal.x;
+        vertices[index1 + offsetNormals + 1] += normal.y;
+        vertices[index1 + offsetNormals + 2] += normal.z;
 
-        vertices[index0 + offsetNormal] += normal.x;
-        vertices[index0 + offsetNormal+1] += normal.y;
-        vertices[index0 + offsetNormal+2] += normal.z;
+        vertices[index2 + offsetNormals] += normal.x;
+        vertices[index2 + offsetNormals + 1] += normal.y;
+        vertices[index2 + offsetNormals + 2] += normal.z;
 
-        vertices[index1 + offsetNormal] += normal.x;
-        vertices[index1 + offsetNormal + 1] += normal.y;
-        vertices[index1 + offsetNormal + 2] += normal.z;
-
-        vertices[index2 + offsetNormal] += normal.x;
-        vertices[index2 + offsetNormal + 1] += normal.y;
-        vertices[index2 + offsetNormal + 2] += normal.z;
     }
 
-    for (int i = 0; i < numVertices / numDatosV; i++)
-    {
-        unsigned int vertexNormalIndex = i * numVertices + offsetNormal;
-        glm::vec3 normal(vertices[vertexNormalIndex], vertices[vertexNormalIndex + 1], vertices[vertexNormalIndex + 2]);
+    for (int i = 0; i < numVertices / numDatosV; i++) {
+        unsigned int vertexNormIndex = i * numDatosV + offsetNormals;
+        glm::vec3 normal(vertices[vertexNormIndex], vertices[vertexNormIndex + 1], vertices[vertexNormIndex + 2]);
         normal = glm::normalize(normal);
-        vertices[vertexNormalIndex] = normal.x;
-        vertices[vertexNormalIndex + 1] = normal.y;
-        vertices[vertexNormalIndex + 2] = normal.z;
+        vertices[vertexNormIndex] = normal.x;
+        vertices[vertexNormIndex + 1] = normal.y;
+        vertices[vertexNormIndex + 2] = normal.z;
     }
 }

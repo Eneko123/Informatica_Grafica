@@ -18,6 +18,7 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Material.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
 const float TORADIANS = M_PI / 180.0f;
@@ -32,7 +33,7 @@ std::vector<Shader*> shaderList;
 InputManager input;
 Camera mainCamera;
 Light luzDireccional;
-
+Material mat;
 //Vertex shader
 static const char* vShader = "Shaders/shader.vert";
 //Fragment shader
@@ -41,16 +42,16 @@ static const char* fShader = "Shaders/shader.frag";
 
 void CreateTriangle() {
     GLfloat vertices[] = {
-        // x     y      z    nx    ny    nz
+//       x        y    z    nx     ny     nz
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
         1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f
     };
     GLuint indices[] = {
-        0, 3, 1,
-        1, 3, 2,
-        2, 3, 0,
+        0, 1, 3,
+        1, 2, 3,
+        2, 0, 3,
         0, 2 ,1
     };
     Mesh* newMesh = new Mesh();
@@ -70,24 +71,22 @@ int main()
 {
     Window mainWindow = Window(WIDTH, HEIGHT);
     mainWindow.Initialize();
-
     input = InputManager();
     input.Initialise(mainWindow.getWindow());
-
     mainCamera = Camera(
-        glm::vec3(0,0,-5), 
-        0.0f, -90.0f,
+        glm::vec3(0, 0, 5.0f),
+        -90.0f, 0.0f,
         5.0f,
         1.0f,
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
-
-    luzDireccional = Light(glm::vec3(1.0f, 1.0f, 1.0f), 10.0f);
+    luzDireccional = Light(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1.0f);
+	mat = Material(1.0f, 32.0f);
 
     CreateShader();
     CreateTriangle();
 
-    glm::mat4 projeccion = glm::perspective(glm::radians(45.0f), mainWindow.getBufferWidth() /  (GLfloat) mainWindow.getBufferHeight(), 0.1f, 100.0f);
+    glm::mat4 projeccion = glm::perspective(glm::radians(45.0f), mainWindow.getBufferWidth() / (GLfloat)mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
 
     float lastTime = (float)glfwGetTime();
@@ -104,22 +103,26 @@ int main()
 
         mainCamera.update(input, deltaTime);
 
-        luzDireccional.UseLight(shaderList[0]->GetIdAmbientColor(), shaderList[0]->GetIdAmbientIntensity());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderList[0]->useShader();
 
+
+        luzDireccional.UseLight(shaderList[0]->GetIdAmbientColor(), shaderList[0]->GetIdAmbientIntensity(),
+            shaderList[0]->GetIdLightDir(), shaderList[0]->GetIdDiffuseInten());
+
         glm::mat4 model(1.0f);
-        model = glm::translate(model, glm::vec3(0, 0.0f, -2.0f));
+        model = glm::translate(model, glm::vec3(0, 0.0f, 0.0f));
         glUniformMatrix4fv(shaderList[0]->GetIdModel(), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(shaderList[0]->GetIdProjection(), 1, GL_FALSE, glm::value_ptr(projeccion));
         glUniformMatrix4fv(shaderList[0]->GetIdView(), 1, GL_FALSE, glm::value_ptr(mainCamera.getViewMatrix()));
 
+        //mat.UseMaterial(shaderList[0]->Get())
+
         meshList[0]->RenderMesh();
         glUseProgram(0);
-
 
         mainWindow.swapBuffers();
     }

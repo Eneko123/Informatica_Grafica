@@ -5,6 +5,10 @@ InputManager* InputManager::instance = nullptr;
 InputManager::InputManager()
 {
 	window = nullptr;
+	lastX = 0.0f;
+	lastY = 0.0f;
+	deltaX = 0.0f;
+	deltaY = 0.0f;
 }
 
 void InputManager::Initialise(GLFWwindow* newwindow)
@@ -12,7 +16,9 @@ void InputManager::Initialise(GLFWwindow* newwindow)
 	window = newwindow;
 	instance = this;
 	glfwSetKeyCallback(window, handleKeys);
-	glfwSetCursorPosCallback(window, handelMouse);
+	glfwSetCursorPosCallback(window, handleMouse);
+
+
 }
 
 bool InputManager::isKeyPressed(int key)
@@ -32,13 +38,13 @@ void InputManager::handleKeys(GLFWwindow* window, int key, int scancode, int act
 
 	if (action == GLFW_PRESS) instance->keyState[key] = true;
 	else if (action == GLFW_RELEASE) instance->keyState[key] = false;
+
 }
 
-void InputManager::handelMouse(GLFWwindow* window, double posX, double posY)
+void InputManager::handleMouse(GLFWwindow* window, double posX, double posY)
 {
 	if (!instance) return;
-	if (instance->firstMove)
-	{
+	if (instance->firstMove) {
 		instance->lastX = posX;
 		instance->lastY = posY;
 		instance->deltaX = 0.0f;
@@ -52,3 +58,5 @@ void InputManager::handelMouse(GLFWwindow* window, double posX, double posY)
 	instance->lastX = posX;
 	instance->lastY = posY;
 }
+
+

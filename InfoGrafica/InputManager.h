@@ -7,9 +7,7 @@ class InputManager
 public:
 	InputManager();
 	void Initialise(GLFWwindow* newwindow);
-	
 	bool isKeyPressed(int key);
-
 	double getMouseDeltaX() { return deltaX; }
 	double getMouseDeltaY() { return deltaY; }
 	bool firstMove = true;
@@ -22,9 +20,11 @@ private:
 	double deltaX, deltaY;
 
 
+
 	static InputManager* instance;
 	static void handleKeys(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void handleMouse(GLFWwindow* window, double posX, double posY);
 
-	static void handelMouse(GLFWwindow* window, double posX, double posY);
+
 };
 
