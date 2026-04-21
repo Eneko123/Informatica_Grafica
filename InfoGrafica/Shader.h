@@ -6,7 +6,26 @@
 #include <fstream>
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
+struct UniformBaseLight {
+	GLuint uniformColor;
+	GLuint uniformAmbientInten;
+	GLuint uniformDiffuseInten;
+	
+};
+struct UniformDirectionalLight : public UniformBaseLight {
+	GLuint uniformDir;
+};
+struct UniformPointLight : public UniformBaseLight {
+	GLuint uniformPosition;
+	GLuint uniformConstant;
+	GLuint uniformLinear;
+	GLuint uniformExponential;
+};
+struct UniformSpotLight : public UniformBaseLight {
+	GLuint uniformPosition;
+};
 
 class Shader
 {
@@ -19,12 +38,10 @@ public:
 	GLuint GetIdProjection() { return uniformProjection; }
 	GLuint GetIdView() { return uniformView; }
 	GLuint GetIdCameraPos() { return uniformCameraPos; }
-	GLuint GetIdAmbientColor() { return uniformAmbientColor; }
-	GLuint GetIdAmbientIntensity() { return uniformAmbientIntensity; }
-	GLuint GetIdLightDir() { return uniformLightDir; }
-	GLuint GetIdDiffuseInten() { return uniformDiffuseInten; }
-	GLuint GetIdSpecularInten() { return uniformSpecularInten; }
+	const UniformDirectionalLight GetIdDirectionalLight() const { return uniformDirectionalLight; }
+	const UniformPointLight GetIdPointLight() const { return uniformPointLight; }
 	GLuint GetIdShininess() { return uniformShininess; }
+	GLuint GetIdSpecularInten() { return uniformSpecularInten; }
 	GLuint GetIdTime() { return uniformTime; }
 
 
@@ -36,8 +53,12 @@ public:
 
 private:
 	GLuint idShader = 0, uniformModel = 0, uniformProjection = 0, uniformView = 0, uniformCameraPos = 0;
-	GLuint uniformAmbientColor = 0, uniformAmbientIntensity = 0, uniformLightDir = 0, uniformDiffuseInten, uniformSpecularInten, uniformShininess;
+	GLuint uniformShininess, uniformSpecularInten;
 	GLuint uniformTime = 0;
+
+	UniformDirectionalLight uniformDirectionalLight;
+	UniformPointLight uniformPointLight;
+
 	std::string ReadFile(const char* path);
 	void AddShader(const char* shaderCode, GLenum shaderType);
 	void CompileShader(const char* vertexCode, const char* fragmentCode);

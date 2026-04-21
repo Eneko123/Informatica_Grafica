@@ -121,11 +121,22 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformProjection = glGetUniformLocation(idShader, "projection");
     uniformView = glGetUniformLocation(idShader, "view");
     uniformCameraPos = glGetUniformLocation(idShader, "cameraPos");
-    uniformAmbientColor = glGetUniformLocation(idShader, "directionalLight.color");
-    uniformAmbientIntensity = glGetUniformLocation(idShader, "directionalLight.ambientInten");
-    uniformLightDir = glGetUniformLocation(idShader, "directionalLight.lightDir");
-    uniformDiffuseInten = glGetUniformLocation(idShader, "directionalLight.diffuseInten");
+	// Directional light
+    uniformDirectionalLight.uniformColor = glGetUniformLocation(idShader, "directionalLight.base.color");
+    uniformDirectionalLight.uniformAmbientInten = glGetUniformLocation(idShader, "directionalLight.base.ambientInten");
+    uniformDirectionalLight.uniformDiffuseInten = glGetUniformLocation(idShader, "directionalLight.base.diffuseInten");
     uniformSpecularInten = glGetUniformLocation(idShader, "specularInten");
+    uniformDirectionalLight.uniformDir = glGetUniformLocation(idShader, "directionalLight.lightDir");
+	// Point light
+    uniformPointLight.uniformColor = glGetUniformLocation(idShader, "pointLight.base.color");
+    uniformPointLight.uniformAmbientInten = glGetUniformLocation(idShader, "pointLight.base.ambientInten");
+    uniformPointLight.uniformDiffuseInten = glGetUniformLocation(idShader, "pointLight.base.diffuseInten");
+
+    uniformPointLight.uniformPosition = glGetUniformLocation(idShader, "pointLight.position");
+    uniformPointLight.uniformConstant = glGetUniformLocation(idShader, "pointLight.constant");
+    uniformPointLight.uniformLinear = glGetUniformLocation(idShader, "pointLight.linear");
+    uniformPointLight.uniformExponential = glGetUniformLocation(idShader, "pointLight.exponential");
+	// Point light base
     uniformShininess = glGetUniformLocation(idShader, "shininess");
     uniformTime = glGetUniformLocation(idShader, "time");
 
