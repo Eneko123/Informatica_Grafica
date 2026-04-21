@@ -35,18 +35,18 @@ Camera mainCamera;
 Light luzDireccional;
 Material mat;
 //Vertex shader
-static const char* vShader = "Shaders/shader.vert";
+static const char* vShader = "Shaders/shader.vs";
 //Fragment shader
-static const char* fShader = "Shaders/shader.frag";
+static const char* fShader = "Shaders/shader.fs";
 
 
 void CreateTriangle() {
     GLfloat vertices[] = {
-//       x        y    z    nx     ny     nz
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f
+//       x        y    z    nx     ny     nz      u     v
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,   0.0f , 1.0f,
+        0.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,   0.5f , 1.0f,
+        1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,    1.0f , 1.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,     0.5f , 0.0f
     };
     GLuint indices[] = {
         0, 1, 3,
@@ -55,8 +55,8 @@ void CreateTriangle() {
         0, 2 ,1
     };
     Mesh* newMesh = new Mesh();
-    newMesh->RecalculateNormals(vertices, indices, 24, 12, 6, 3);
-    newMesh->CreateMesh(vertices, indices, 24, 12);
+    newMesh->RecalculateNormals(vertices, indices, 32, 12, 8, 3);
+    newMesh->CreateMesh(vertices, indices, 32, 12);
     meshList.push_back(newMesh);
 }
 
@@ -80,8 +80,8 @@ int main()
         1.0f,
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
-    luzDireccional = Light(glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1.0f);
-	mat = Material(1.0f, 32.0f);
+    luzDireccional = Light(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, glm::vec3(-0.4f, -1.0f, 0.0f), 1);
+    mat = Material(2, 20);
 
     CreateShader();
     CreateTriangle();
@@ -118,8 +118,9 @@ int main()
         glUniformMatrix4fv(shaderList[0]->GetIdModel(), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(shaderList[0]->GetIdProjection(), 1, GL_FALSE, glm::value_ptr(projeccion));
         glUniformMatrix4fv(shaderList[0]->GetIdView(), 1, GL_FALSE, glm::value_ptr(mainCamera.getViewMatrix()));
-
-        //mat.UseMaterial(shaderList[0]->Get())
+        glUniform3fv(shaderList[0]->GetIdCameraPos(), 1, glm::value_ptr(mainCamera.getCameraPos()));
+        glUniform1f(shaderList[0]->GetIdTime(), currentTime);
+        mat.UseMaterial(shaderList[0]->GetIdSpecularInten(), shaderList[0]->GetIdShininess());
 
         meshList[0]->RenderMesh();
         glUseProgram(0);

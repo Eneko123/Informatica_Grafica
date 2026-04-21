@@ -120,8 +120,14 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformModel = glGetUniformLocation(idShader, "model");
     uniformProjection = glGetUniformLocation(idShader, "projection");
     uniformView = glGetUniformLocation(idShader, "view");
+    uniformCameraPos = glGetUniformLocation(idShader, "cameraPos");
     uniformAmbientColor = glGetUniformLocation(idShader, "directionalLight.color");
     uniformAmbientIntensity = glGetUniformLocation(idShader, "directionalLight.ambientInten");
     uniformLightDir = glGetUniformLocation(idShader, "directionalLight.lightDir");
     uniformDiffuseInten = glGetUniformLocation(idShader, "directionalLight.diffuseInten");
+    uniformSpecularInten = glGetUniformLocation(idShader, "specularInten");
+    uniformShininess = glGetUniformLocation(idShader, "shininess");
+    uniformTime = glGetUniformLocation(idShader, "time");
+
+
 }
