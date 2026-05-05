@@ -81,5 +81,5 @@ void main(){
     luzFinal += CalculateDirectionalLight(directionalLight);
     luzFinal += CalculatePointLight(pointLight);
 
-    colour = vec4(vec3(1,0,0)*luzFinal, 1.0); 
+    colour = vec4(texColor*luzFinal, 1.0); 
 }

@@ -124,7 +124,7 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
     uniformTime = glGetUniformLocation(idShader, "time");
 
 
-    uniformTime = glGetUniformLocation(idShader, "colorMap");
+    uniformColorMap = glGetUniformLocation(idShader, "colorMap");
 
 
     uniformDirLight.base.uniformColor = glGetUniformLocation(idShader, "directionalLight.base.color");
