@@ -19,7 +19,6 @@
 #include "Camera.h"
 #include "Light.h"
 #include "DirectionalLight.h"
-#include "PointLight.h"
 #include "Material.h"
 
 const GLint WIDTH = 800, HEIGHT = 600;
@@ -35,7 +34,6 @@ std::vector<Shader*> shaderList;
 InputManager input;
 Camera mainCamera;
 DirectionalLight luzDireccional;
-PointLight luzPunto;
 Material mat;
 //Vertex shader
 static const char* vShader = "Shaders/shader.vs";
@@ -83,8 +81,7 @@ int main()
         1.0f,
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
-    luzDireccional = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, 0.0f, glm::vec3(-0.4f, -1.0f, 0.0f));
-	luzPunto = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1.0f, glm::vec3(-2.0f, 2.0f, -3.0f), 1.0f, 0.09f, 0.032f);
+    luzDireccional = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1, glm::vec3(-0.4f, -1.0f, 0.0f));
     mat = Material(2, 20);
 
     CreateShader();
@@ -113,8 +110,7 @@ int main()
 
         shaderList[0]->useShader();
 
-		luzDireccional.UseLight(shaderList[0]->GetIdDirectionalLight());
-		luzPunto.UseLight(shaderList[0]->GetIdPointLight());
+        luzDireccional.UseLight(shaderList[0]->GetIdDirectionalLight());
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0, 0.0f, 0.0f));

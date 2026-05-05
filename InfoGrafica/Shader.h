@@ -14,19 +14,11 @@ struct UniformBaseLight {
 	GLuint uniformDiffuseInten;
 	
 };
-struct UniformDirectionalLight : public UniformBaseLight {
+struct UniformDirectionalLigh {
+	
+	UniformBaseLight base;
 	GLuint uniformDir;
 };
-struct UniformPointLight : public UniformBaseLight {
-	GLuint uniformPosition;
-	GLuint uniformConstant;
-	GLuint uniformLinear;
-	GLuint uniformExponential;
-};
-struct UniformSpotLight : public UniformBaseLight {
-	GLuint uniformPosition;
-};
-
 class Shader
 {
 public:
@@ -38,8 +30,7 @@ public:
 	GLuint GetIdProjection() { return uniformProjection; }
 	GLuint GetIdView() { return uniformView; }
 	GLuint GetIdCameraPos() { return uniformCameraPos; }
-	const UniformDirectionalLight GetIdDirectionalLight() const { return uniformDirectionalLight; }
-	const UniformPointLight GetIdPointLight() const { return uniformPointLight; }
+	const UniformDirectionalLigh GetIdDirectionalLight() { return uniformDirLight; }
 	GLuint GetIdShininess() { return uniformShininess; }
 	GLuint GetIdSpecularInten() { return uniformSpecularInten; }
 	GLuint GetIdTime() { return uniformTime; }
@@ -55,9 +46,7 @@ private:
 	GLuint idShader = 0, uniformModel = 0, uniformProjection = 0, uniformView = 0, uniformCameraPos = 0;
 	GLuint uniformShininess, uniformSpecularInten;
 	GLuint uniformTime = 0;
-
-	UniformDirectionalLight uniformDirectionalLight;
-	UniformPointLight uniformPointLight;
+	UniformDirectionalLigh uniformDirLight;
 
 	std::string ReadFile(const char* path);
 	void AddShader(const char* shaderCode, GLenum shaderType);

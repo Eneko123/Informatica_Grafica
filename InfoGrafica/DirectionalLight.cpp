@@ -5,13 +5,15 @@ DirectionalLight::DirectionalLight()
 }
 
 DirectionalLight::DirectionalLight(glm::vec3 color, GLfloat ambientIntensity, GLfloat diffuseIntensity, glm::vec3 dir)
-	: Light(color, ambientIntensity, dir, diffuseIntensity)
+	: Light(color, ambientIntensity, diffuseIntensity)
 {
 	direction = dir;
 }
 
-void DirectionalLight::UseLight(UniformDirectionalLight uniformDirectionalLight)
+void DirectionalLight::UseLight(UniformDirectionalLigh uniformDirLight)
 {
-	Light::UseLight(uniformDirectionalLight);
-	glUniform3f(uniformDirectionalLight.uniformDir, direction.x, direction.y, direction.z);
+	Light::UseLight(uniformDirLight.base);
+	glUniform3f(uniformDirLight.uniformDir, direction.x, direction.y, direction.z);
+
+
 }

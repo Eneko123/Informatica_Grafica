@@ -8,7 +8,7 @@ Light::Light()
 
 }
 
-Light::Light(glm::vec3 color, GLfloat ambientIntensity, glm::vec3 dir, GLfloat diffuseIntensity)
+Light::Light(glm::vec3 color, GLfloat ambientIntensity, GLfloat diffuseIntensity)
 {
 	this->color = color;
 	this->aInstensity = ambientIntensity;
@@ -19,9 +19,9 @@ Light::~Light()
 {
 }
 
-void Light::UseLight(UniformBaseLight baseLigth)
+void Light::UseLight(UniformBaseLight baseLight)
 {
-	glUniform1f(baseLigth.uniformAmbientInten, aInstensity);
-	glUniform1f(baseLigth.uniformDiffuseInten, dIntensity);
-	glUniform3f(baseLigth.uniformColor, color.x, color.y, color.z);
+	glUniform1f(baseLight.uniformAmbientInten, aInstensity);
+	glUniform1f(baseLight.uniformDiffuseInten, dIntensity);
+	glUniform3f(baseLight.uniformColor, color.x, color.y, color.z);
 }

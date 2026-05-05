@@ -8,10 +8,10 @@ class Light
 {
 public:
 	Light();
-	Light(glm::vec3 color, GLfloat ambientIntensity, glm::vec3 dir, GLfloat diffuseIntensity);
+	Light(glm::vec3 color, GLfloat ambientIntensity, GLfloat diffuseIntensity);
 	~Light();
 protected:
-	void UseLight(UniformBaseLight baseLigth);
+	void UseLight(UniformBaseLight baseLight);
 	glm::vec3 color;
 	GLfloat aInstensity;
 	GLfloat dIntensity;
