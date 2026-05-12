@@ -36,12 +36,14 @@ uniform float shininess;
 uniform float time;
 
 uniform sampler2D colorMap;
+uniform sampler2D aoMap;
+uniform sampler2D normalMap;
 
 out vec4 colour;
 
-vec3 CalculateLightValues(BaseLight bl, vec3 norm, vec3 lDir, vec3 viewDir){
+vec3 CalculateLightValues(BaseLight bl, vec3 norm, vec3 lDir, vec3 viewDir, float ao){
     //Ambient
-    vec3 ambient = bl.ambientInten * bl.color;
+    vec3 ambient = bl.ambientInten * bl.color * ao;
     //Diffuse
     float diff = max(dot(norm, lDir), 0.0f);
     vec3 diffuse = bl.color * bl.diffuseInten * diff;
@@ -53,16 +55,16 @@ vec3 CalculateLightValues(BaseLight bl, vec3 norm, vec3 lDir, vec3 viewDir){
 }
 
 
-vec3 CalculateDirectionalLight(DirectionalLight dirLight){
+vec3 CalculateDirectionalLight(DirectionalLight dirLight, float ao){
     vec3 norm = normalize(normal);
     vec3 lDir  = normalize(directionalLight.lightDir);
     vec3 viewDir = normalize(cameraPos - posFrag);
 
-    return CalculateLightValues(dirLight.base, norm, lDir, viewDir);
+    return CalculateLightValues(dirLight.base, norm, lDir, viewDir, ao);
 
 }
 
-vec3 CalculatePointLight(PointLight pLight){
+vec3 CalculatePointLight(PointLight pLight, float ao){
     vec3 norm = normalize(normal);
     vec3 lDir  = normalize(posFrag - pLight.pos);
     vec3 viewDir = normalize(cameraPos - posFrag);
@@ -70,16 +72,18 @@ vec3 CalculatePointLight(PointLight pLight){
     float d = distance(posFrag, pLight.pos);
     float attenuation = 1/(pLight.exponentialV * d *d +  pLight.linearV * d + pLight.constV);
 
-    return CalculateLightValues(pLight.base, norm, lDir, viewDir) * attenuation;
+    return CalculateLightValues(pLight.base, norm, lDir, viewDir, ao) * attenuation;
 }
 
 void main(){
     
     vec3 texColor = texture(colorMap, uvFrag).rgb;
-
+    float aoValue = texture(aoMap, uvFrag).r;
+    vec3 normalValue = texture(normalMap, uvFrag).rgb;
+    aoValue = clamp(aoValue, 0.0f, 1.0f);
     vec3 luzFinal = vec3(0.0f);
-    luzFinal += CalculateDirectionalLight(directionalLight);
-    luzFinal += CalculatePointLight(pointLight);
+    luzFinal += CalculateDirectionalLight(directionalLight, aoValue);
+    luzFinal += CalculatePointLight(pointLight, aoValue);
 
-    colour = vec4(texColor*luzFinal, 1.0); 
+    colour = vec4(normalValue*luzFinal, 1.0); 
 }

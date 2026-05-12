@@ -45,7 +45,9 @@ PointLight pointLightArray[TAM_POINT_LIGHTS];
 unsigned int numPointLight;
 
 Material mat;
-Texture texturaEjemplo;
+
+Texture texturaColor, texturaAO, texturaNormals;
+
 //Vertex shader
 static const char* vShader = "Shaders/shader.vs";
 //Fragment shader
@@ -106,8 +108,13 @@ int main()
     luzDireccional = DirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1, glm::vec3(-0.4f, -1.0f, 0.0f));
     pointLight = PointLight(glm::vec3(1.0f, 1.0f, 1.0f), 0.1f, 1, glm::vec3(-2.0f, 2.0f, -3.0f), 0.01f, 1.0f, 1.0f);
     mat = Material(2, 20);
-    texturaEjemplo = Texture("Assets/Textures/marble_cliff_02_1k/textures/marble_cliff_02_diff_1k.jpg");
-    texturaEjemplo.LoadTexture();
+    texturaColor = Texture("Assets/Textures/marble_cliff_02_1k/textures/marble_cliff_02_diff_1k.jpg");
+    texturaColor.LoadTexture();
+
+    texturaAO = Texture("Assets/Textures/marble_cliff_02_1k/textures/marble_cliff_02_arm_1k.jpg");
+    texturaAO.LoadTexture();
+    texturaNormals = Texture("Assets/Textures/marble_cliff_02_1k/textures/marble_cliff_02_nor_dx_1k.jpg");
+    texturaNormals.LoadTexture();
     CreateShader();
     //CreateTriangle();
     CreateModelFromOBJ();
@@ -137,8 +144,16 @@ int main()
         luzDireccional.UseLight(shaderList[0]->GetIdDirectionalLight());
         pointLight.UseLight(shaderList[0]->GetIdPointLight());
 
-        texturaEjemplo.UseTexture();
-        glUniform1i(shaderList[0]->GetIdColorMap(), 0);
+        
+
+        texturaAO.UseTexture(0);
+        glUniform1i(shaderList[0]->GetIdAoMap(), 0);
+
+        texturaColor.UseTexture(1);
+        glUniform1i(shaderList[0]->GetIdColorMap(), 1);
+
+        texturaNormals.UseTexture(2);
+        glUniform1i(shaderList[0]->GetIdNormalMap(), 2);
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(0, 0.0f, 0.0f));

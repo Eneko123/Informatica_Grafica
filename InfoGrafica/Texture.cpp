@@ -50,9 +50,9 @@ void Texture::LoadTexture()
 
 }
 
-void Texture::UseTexture()
+void Texture::UseTexture(unsigned int numTextureUnit)
 {
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + numTextureUnit);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 
 }

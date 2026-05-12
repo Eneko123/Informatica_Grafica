@@ -45,7 +45,9 @@ public:
 	GLuint GetIdSpecularInten() { return uniformSpecularInten; }
 	GLuint GetIdTime() { return uniformTime; }
 	GLuint GetIdColorMap() { return uniformColorMap; }
-
+	GLuint GetIdAoMap() { return uniformAoMap; }
+	GLuint GetIdNormalMap() { return uniformNormalMap; }
+	
 
 	void useShader();
 	void deleteShader();
@@ -56,7 +58,7 @@ private:
 	GLuint idShader = 0, uniformModel = 0, uniformProjection = 0, uniformView = 0, uniformCameraPos = 0;
 	GLuint uniformShininess, uniformSpecularInten;
 	GLuint uniformTime = 0;
-	GLuint uniformColorMap;
+	GLuint uniformColorMap, uniformAoMap, uniformNormalMap;
 	UniformDirectionalLight uniformDirLight;
 	UniformPointLight uniformPointLight;
 
